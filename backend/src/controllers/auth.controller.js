@@ -1,9 +1,12 @@
+import { ENV } from "../lib/env.js"
+import { sendWelcomeEmail } from "../email/emailHandler.js"
 import { generateToken, send_JTW_To_Cookies } from "../lib/utils.js"
 import { User } from "../models/User.js"
 import bcrypt from "bcryptjs"
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body
+  const { CLIENT_URL } = ENV
 
   try {
     if (!fullName || !email || !password) {
@@ -47,6 +50,16 @@ export const signup = async (req, res) => {
         email: savedUser.email,
         profilePic: savedUser.profilePic,
       })
+
+      try {
+        const { data } = await sendWelcomeEmail(
+          savedUser.email,
+          savedUser.fullName,
+          CLIENT_URL
+        )
+      } catch (error) {
+        console.error(error)
+      }
     } else {
       res.status(400).json({ message: "Invalid user" })
     }

@@ -1,16 +1,14 @@
 import express from "express"
-import dotenv from "dotenv"
 import path from "path"
 
 import authRoutes from "./routes/auth.route.js"
 import messagesRoutes from "./routes/messages.route.js"
 import { connectDB } from "./lib/db.js"
-
-dotenv.config()
+import { ENV } from "./lib/env.js"
 
 const app = express()
 const __dirname = path.resolve()
-const { PORT, NODE_ENV } = process.env
+const { PORT, NODE_ENV } = ENV
 
 app.use(express.json())
 app.use("/api/auth", authRoutes)
@@ -28,7 +26,7 @@ connectDB()
   .then(() => {
     app.listen(PORT || 3000)
   })
-  .catch((err) => {
+  .catch((_) => {
     console.error("Failed to connect to MongoDB")
     process.exit(1)
   })
