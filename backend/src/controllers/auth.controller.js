@@ -52,11 +52,7 @@ export const signup = async (req, res) => {
       })
 
       try {
-        const { data } = await sendWelcomeEmail(
-          savedUser.email,
-          savedUser.fullName,
-          CLIENT_URL
-        )
+        await sendWelcomeEmail(savedUser.email, savedUser.fullName, CLIENT_URL)
       } catch (error) {
         console.error(error)
       }
@@ -67,4 +63,31 @@ export const signup = async (req, res) => {
     console.error(error)
     res.status(500).json({ message: "Internal error" })
   }
+}
+
+export const login = async (req, res) => {
+  const { email, password } = req.body
+
+  try {
+    const user = await User.findOne({ email })
+    if (!user) return res.status(400).json({ message: "Invalid credentials" })
+    const passwordCorrect = bcrypt.compare(password, user.password)
+    if (passwordCorrect)
+      return res.status(400).json({ message: "Invalid credentials" })
+    const token = generateToken(user._id)
+    send_JTW_To_Cookies(token, res)
+    return res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    })
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" })
+  }
+}
+
+export const logout = (_, res) => {
+  res.cookie("jwt", "", { maxAge: 0 })
+  res.status(200).json({ message: "Logged successfuly" })
 }
