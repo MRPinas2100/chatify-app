@@ -37,15 +37,15 @@ export const signup = async (req, res) => {
     })
 
     if (newUser) {
-      const token = generateToken(newUser._id)
+      const savedUser = await newUser.save()
+      const token = generateToken(savedUser._id)
       send_JTW_To_Cookies(token, res)
-      await newUser.save()
 
       res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        profilePic: newUser.profilePic,
+        _id: savedUser._id,
+        fullName: savedUser.fullName,
+        email: savedUser.email,
+        profilePic: savedUser.profilePic,
       })
     } else {
       res.status(400).json({ message: "Invalid user" })
