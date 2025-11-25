@@ -12,7 +12,7 @@ export const generateToken = (userId) => {
   return token
 }
 
-export const send_JTW_To_Cookies = (token, res) => {
+export const send_JWT_To_Cookies = (token, res) => {
   const { NODE_ENV } = ENV
   res.cookie("jwt", token, {
     maxAge: 7 * 24 * 60 * 60 * 1000, //Milliseconds
