@@ -1,0 +1,11 @@
+import { v2 as cloudinaryLib } from "cloudinary"
+import { ENV } from "./env.js"
+
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_CLOUD_KEY, CLOUDINARY_CLOUD_SECRET } =
+  ENV
+
+export const cloudinary = cloudinaryLib.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_CLOUD_KEY,
+  api_secret: CLOUDINARY_CLOUD_SECRET,
+})

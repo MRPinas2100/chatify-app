@@ -1,7 +1,8 @@
 import { ENV } from "../lib/env.js"
 import { sendWelcomeEmail } from "../email/emailHandler.js"
-import { generateToken, send_JTW_To_Cookies } from "../lib/utils.js"
+import { generateToken, send_JWT_To_Cookies } from "../lib/utils.js"
 import { User } from "../models/User.js"
+import { cloudinary } from "../lib/cloudinary.js"
 import bcrypt from "bcryptjs"
 
 export const signup = async (req, res) => {
@@ -42,7 +43,7 @@ export const signup = async (req, res) => {
     if (newUser) {
       const savedUser = await newUser.save()
       const token = generateToken(savedUser._id)
-      send_JTW_To_Cookies(token, res)
+      send_JWT_To_Cookies(token, res)
 
       res.status(201).json({
         _id: savedUser._id,
@@ -76,10 +77,10 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email })
     if (!user) return res.status(400).json({ message: "Invalid credentials" })
     const passwordCorrect = bcrypt.compare(password, user.password)
-    if (passwordCorrect)
+    if (!passwordCorrect)
       return res.status(400).json({ message: "Invalid credentials" })
     const token = generateToken(user._id)
-    send_JTW_To_Cookies(token, res)
+    send_JWT_To_Cookies(token, res)
     return res.status(200).json({
       _id: user._id,
       fullName: user.fullName,
@@ -94,4 +95,28 @@ export const login = async (req, res) => {
 export const logout = (_, res) => {
   res.cookie("jwt", "", { maxAge: 0 })
   res.status(200).json({ message: "Logged successfuly" })
+}
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePic } = req.body
+
+    if (!profilePic)
+      return res.status(400).json({ message: "Profile picture is required" })
+
+    const userId = req.user._id
+    const uploadResponse = await cloudinary.uploader.upload(profilePic)
+    const updateUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: uploadResponse.secure_url },
+      { new: true }
+    ).select("-password")
+    res.status(200).json({ message: updateUser })
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" })
+  }
+}
+
+export const check = (req, res) => {
+  res.status(200).json(req.user)
 }
