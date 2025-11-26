@@ -12,6 +12,8 @@ const {
   CLOUDINARY_CLOUD_SECRET,
   MONGO_URI,
   CLIENT_URL,
+  ARCJET_KEY,
+  ARCJET_ENV,
 } = process.env
 
 export const ENV = {
@@ -26,4 +28,6 @@ export const ENV = {
   CLOUDINARY_CLOUD_SECRET,
   MONGO_URI,
   CLIENT_URL,
+  ARCJET_KEY,
+  ARCJET_ENV,
 }
