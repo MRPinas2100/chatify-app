@@ -54,15 +54,14 @@ export const signup = async (req, res) => {
 
       try {
         await sendWelcomeEmail(savedUser.email, savedUser.fullName, CLIENT_URL)
-      } catch (error) {
-        console.error(error)
+      } catch (_) {
+        res.status(500).json({ message: "Internal Server error" })
       }
     } else {
       res.status(400).json({ message: "Invalid user" })
     }
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Internal error" })
+  } catch (_) {
+    res.status(500).json({ message: "Internal Server error" })
   }
 }
 
@@ -87,8 +86,8 @@ export const login = async (req, res) => {
       email: user.email,
       profilePic: user.profilePic,
     })
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error" })
+  } catch (_) {
+    res.status(500).json({ message: "Internal server error" })
   }
 }
 
@@ -112,8 +111,8 @@ export const updateProfile = async (req, res) => {
       { new: true }
     ).select("-password")
     res.status(200).json({ message: updateUser })
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error" })
+  } catch (_) {
+    res.status(500).json({ message: "Internal server error" })
   }
 }
 

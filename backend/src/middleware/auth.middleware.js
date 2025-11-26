@@ -20,8 +20,7 @@ export const protectRoute = async (req, res, next) => {
     req.user = user
 
     next()
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: "Internal server error" })
+  } catch (_) {
+    res.status(500).json({ message: "Internal server error" })
   }
 }
