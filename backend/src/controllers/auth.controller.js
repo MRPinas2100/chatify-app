@@ -87,7 +87,7 @@ export const login = async (req, res) => {
       profilePic: user.profilePic,
     })
   } catch (_) {
-    res.status(500).json({ message: "Internal server error" })
+    return res.status(500).json({ message: "Internal server error" })
   }
 }
 
@@ -112,7 +112,7 @@ export const updateProfile = async (req, res) => {
     ).select("-password")
     res.status(200).json({ message: updateUser })
   } catch (_) {
-    res.status(500).json({ message: "Internal server error" })
+    return res.status(500).json({ message: "Internal server error" })
   }
 }
 

@@ -10,7 +10,7 @@ export const getAllContacts = async (req, res) => {
     }).select("-password")
     res.status(200).json({ filteredUsers })
   } catch (_) {
-    res.status(500).json({ message: "Internal server error" })
+    return res.status(500).json({ message: "Internal server error" })
   }
 }
 
@@ -55,7 +55,7 @@ export const getMessagesByUserId = async (req, res) => {
 
     res.status(200).json(messages)
   } catch (_) {
-    res.status(500).json({ message: "Internal server error" })
+    return res.status(500).json({ message: "Internal server error" })
   }
 }
 
@@ -97,6 +97,6 @@ export const sendMessage = async (req, res) => {
     await newMessage.save()
     res.status(201).json({ newMessage })
   } catch (_) {
-    res.status(500).json({ message: "Internal server error" })
+    return res.status(500).json({ message: "Internal server error" })
   }
 }
