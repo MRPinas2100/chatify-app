@@ -1,7 +1,7 @@
 {
   "name": "chatify-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Learning",
   "main": "index.js",
   "engines": {
     "node": ">= 20.0.0"
@@ -20,9 +20,5 @@
   "bugs": {
     "url": "https://github.com/MRPinas2100/chatify-app/issues"
   },
-  "homepage": "https://github.com/MRPinas2100/chatify-app#readme",
-  "dependencies": {
-    "@arcjet/inspect": "^1.0.0-beta.10",
-    "@arcjet/node": "^1.0.0-beta.10"
-  }
+  "homepage": "https://github.com/MRPinas2100/chatify-app#readme"
 }
