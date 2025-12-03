@@ -2,11 +2,9 @@ import { Outlet } from "react-router-dom"
 
 function AuthLayout() {
   return (
-    <div>
-      <main>
-        <Outlet />
-      </main>
-    </div>
+    <main className=" w-full h-full bg-transparent">
+      <Outlet />
+    </main>
   )
 }
 
