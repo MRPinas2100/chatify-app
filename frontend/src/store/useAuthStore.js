@@ -8,6 +8,7 @@ export const useAuthStore = create((set) => ({
   authUser: null,
   isCheckingAuth: true,
   isSigningUp: false,
+  isLoggingIn: false,
 
   checkAuth: async () => {
     try {
@@ -28,7 +29,7 @@ export const useAuthStore = create((set) => ({
     set({ isSigningUp: true })
 
     try {
-      const res = await axiosInstance.post("auth/signup", formData)
+      const res = await axiosInstance.post("/auth/signup", formData)
       if (res.status !== 201) throw new Error("Internal error.")
       const { data } = res
       set({ authUser: data })
@@ -38,6 +39,35 @@ export const useAuthStore = create((set) => ({
     } finally {
       await new Promise((resolve) => setTimeout(resolve, 2000))
       set({ isSigningUp: false })
+    }
+  },
+
+  login: async (formdata) => {
+    set({ isLoggingIn: true })
+
+    try {
+      const res = await axiosInstance.post("/auth/login", formdata)
+      if (res.status !== 200) throw new Error("Internal error.")
+      const { data } = res
+      set({ authUser: data })
+    } catch (err) {
+      toast.error(err.response?.data?.message ?? "Internal Error")
+    } finally {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      set({ isLoggingIn: false })
+    }
+  },
+
+  logout: async () => {
+    try {
+      const res = await axiosInstance.post("/auth/logout")
+      if (res.status !== 200) throw new Error("Internal error.")
+      const { data } = res
+      const { message } = data
+      set({ authUser: null })
+      toast.success(message)
+    } catch (err) {
+      toast.error(err.response?.data?.message ?? "Internal Error")
     }
   },
 }))
