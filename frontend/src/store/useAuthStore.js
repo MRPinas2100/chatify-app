@@ -26,9 +26,8 @@ export const useAuthStore = create((set) => ({
   },
 
   signup: async (formData) => {
-    set({ isSigningUp: true })
-
     try {
+      set({ isSigningUp: true })
       const res = await axiosInstance.post("/auth/signup", formData)
       if (res.status !== 201) throw new Error("Internal error.")
       const { data } = res
@@ -43,9 +42,8 @@ export const useAuthStore = create((set) => ({
   },
 
   login: async (formdata) => {
-    set({ isLoggingIn: true })
-
     try {
+      set({ isLoggingIn: true })
       const res = await axiosInstance.post("/auth/login", formdata)
       if (res.status !== 200) throw new Error("Internal error.")
       const { data } = res

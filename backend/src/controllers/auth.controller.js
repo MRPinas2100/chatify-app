@@ -75,9 +75,12 @@ export const login = async (req, res) => {
   try {
     const user = await User.findOne({ email })
     if (!user) return res.status(400).json({ message: "Invalid credentials" })
-    const passwordCorrect = bcrypt.compare(password, user.password)
-    if (!passwordCorrect)
+    const isPasswordCorrect = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid credentials" })
+    }
+
     const token = generateToken(user._id)
     send_JWT_To_Cookies(token, res)
     return res.status(200).json({
