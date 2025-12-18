@@ -68,4 +68,16 @@ export const useAuthStore = create((set) => ({
       toast.error(err.response?.data?.message ?? "Internal Error")
     }
   },
+
+  updateProfile: async (profilePic) => {
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", profilePic)
+      if (res.status !== 200) throw new Error("Internal error.")
+      const { data } = res
+      set({ authUser: data })
+      toast.success("Profile updated successfully")
+    } catch (err) {
+      toast.error(err.response?.data?.message ?? "Internal Error")
+    }
+  },
 }))

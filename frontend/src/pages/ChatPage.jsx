@@ -1,15 +1,13 @@
-import ActiveTabSwitch from "../components/ActiveTabSwitch"
+import { ActiveTabSwitch } from "../components/ActiveTabSwitch"
 import { BorderAnimatedContainer } from "../components/BorderAnimatedContainer"
-import ChatContainer from "../components/ChatContainer"
-import ChatsList from "../components/ChatsList"
-import ContactList from "../components/ContactList"
-import NoConversationPlaceholder from "../components/NoConversationPlaceholder"
-import ProfileHeader from "../components/ProfileHeader"
-import { useAuthStore } from "../store/useAuthStore"
+import { ChatContainer } from "../components/ChatContainer"
+import { ChatsList } from "../components/ChatsList"
+import { ContactList } from "../components/ContactList"
+import { NoConversationPlaceholder } from "../components/NoConversationPlaceholder"
+import { ProfileHeader } from "../components/ProfileHeader"
 import { useChatStore } from "../store/useChatStore"
 
-function ChatPage() {
-  const { logout } = useAuthStore()
+export const ChatPage = () => {
   const { activeTab, selectedUser } = useChatStore()
 
   return (
@@ -30,5 +28,3 @@ function ChatPage() {
     </div>
   )
 }
-
-export default ChatPage

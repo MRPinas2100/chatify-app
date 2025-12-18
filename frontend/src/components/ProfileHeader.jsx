@@ -5,7 +5,7 @@ import { LogOutIcon, Volume2Icon, VolumeOffIcon } from "lucide-react"
 
 const mouseClickSound = new Audio("/sounds/mouse-click.mp3")
 
-const ProfileHeader = () => {
+export const ProfileHeader = () => {
   const { logout, authUser, updateProfile } = useAuthStore()
   const { fullName, profilePic } = authUser
 
@@ -14,10 +14,24 @@ const ProfileHeader = () => {
 
   const fileInputRef = useRef(null)
 
-  const handleImageUpload = () => {}
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0]
+
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onloadend = async () => {
+      const base64Image = reader.result
+      setSelectedImage(base64Image)
+      await updateProfile({ profilePic: base64Image })
+    }
+  }
+
   const handleClickEventInputFile = () => {
     fileInputRef.current.click()
   }
+
   const handleClickToggleAudio = () => {
     mouseClickSound.currentTime = 0
     mouseClickSound
@@ -86,5 +100,3 @@ const ProfileHeader = () => {
     </div>
   )
 }
-
-export default ProfileHeader

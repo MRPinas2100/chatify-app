@@ -5,7 +5,7 @@ import { LockIcon, MailIcon, MessageCircleIcon } from "lucide-react"
 import { LoaderIcon } from "react-hot-toast"
 import { Link } from "react-router-dom"
 
-function LoginPage() {
+export const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -134,5 +134,3 @@ function LoginPage() {
     </div>
   )
 }
-
-export default LoginPage
