@@ -54,8 +54,8 @@ export const signup = async (req, res) => {
 
       try {
         await sendWelcomeEmail(savedUser.email, savedUser.fullName, CLIENT_URL)
-      } catch (_) {
-        res.status(500).json({ message: "Internal Server error" })
+      } catch (err) {
+        console.error("Welcome email failed:", err?.message || err)
       }
     } else {
       res.status(400).json({ message: "Invalid user" })

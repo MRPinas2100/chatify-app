@@ -5,10 +5,13 @@ import { User } from "../models/User.js"
 export const getAllContacts = async (req, res) => {
   const loggedInUserId = req.user._id
   try {
-    const filteredUsers = await User.find({
-      id: { $ne: loggedInUserId },
+    const users = await User.find({
+      _id: { $ne: loggedInUserId },
     }).select("-password")
-    res.status(200).json({ filteredUsers })
+    const filteredUsers = users.sort((a, b) => {
+      return a.fullName.localeCompare(b.fullName)
+    })
+    res.status(200).json(filteredUsers)
   } catch (_) {
     return res.status(500).json({ message: "Internal server error" })
   }

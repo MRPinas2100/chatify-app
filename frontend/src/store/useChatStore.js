@@ -41,13 +41,27 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get("/messages/chats")
       if (res.status !== 200) throw new Error("Internal error.")
       const { data } = res
-      console.log(res)
       set({ chats: data })
     } catch (err) {
       toast.error(err.response?.data?.message ?? "Internal Error")
     } finally {
       await new Promise((resolve) => setTimeout(resolve, 2000))
       set({ isUsersLoading: false })
+    }
+  },
+
+  getMessagesByUserId: async (userId) => {
+    set({ isMessagesLoading: true })
+
+    try {
+      const res = await axiosInstance.get(`/messages/${userId}`)
+      if (res.status !== 200) throw new Error("Internal error.")
+      const { data } = res
+      set({ messages: data })
+    } catch (err) {
+      toast.error(err.response?.data?.message ?? "Internal Error")
+    } finally {
+      set({ isMessagesLoading: false })
     }
   },
 }))
