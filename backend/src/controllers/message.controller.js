@@ -98,7 +98,7 @@ export const sendMessage = async (req, res) => {
       image: imageUrl,
     })
     await newMessage.save()
-    res.status(201).json({ newMessage })
+    res.status(201).json(newMessage)
   } catch (_) {
     return res.status(500).json({ message: "Internal server error" })
   }

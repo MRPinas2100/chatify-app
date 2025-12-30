@@ -31,6 +31,7 @@ export const useChatStore = create((set, get) => ({
     } catch (err) {
       toast.error(err.response?.data?.message ?? "Internal Error")
     } finally {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       set({ isUsersLoading: false })
     }
   },
@@ -45,7 +46,6 @@ export const useChatStore = create((set, get) => ({
     } catch (err) {
       toast.error(err.response?.data?.message ?? "Internal Error")
     } finally {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
       set({ isUsersLoading: false })
     }
   },
@@ -61,7 +61,21 @@ export const useChatStore = create((set, get) => ({
     } catch (err) {
       toast.error(err.response?.data?.message ?? "Internal Error")
     } finally {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       set({ isMessagesLoading: false })
+    }
+  },
+
+  sendMessage: async (payload) => {
+    const { selectedUser, messages } = get()
+    const { _id } = selectedUser
+    try {
+      const res = await axiosInstance.post(`/messages/send/${_id}`, payload)
+      if (res.status !== 201) throw new Error("Internal Error")
+      const { data } = res
+      set({ messages: [...messages, data] })
+    } catch (err) {
+      toast.error(err.response?.data?.message ?? "Internal Error")
     }
   },
 }))

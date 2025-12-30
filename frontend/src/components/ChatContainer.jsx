@@ -4,9 +4,11 @@ import { useChatStore } from "../store/useChatStore"
 import { ChatHeader } from "./ChatHeader"
 import { NoChatHistoryPlaceholder } from "./NoChatHistoryPlaceholder"
 import { MessageInput } from "./MessageInput"
+import { MessagesLodingSkeleton } from "./MessagesLodingSkeleton"
 
 export const ChatContainer = () => {
-  const { selectedUser, getMessagesByUserId, messages } = useChatStore()
+  const { selectedUser, getMessagesByUserId, messages, isMessagesLoading } =
+    useChatStore()
   const { authUser } = useAuthStore()
 
   const { _id: userId, fullName } = selectedUser
@@ -20,7 +22,7 @@ export const ChatContainer = () => {
     <>
       <ChatHeader />
       <div className="flex-1 px-6 overflow-y-auto py-8">
-        {messages.length > 0 ? (
+        {messages.length > 0 && !isMessagesLoading ? (
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg) => {
               const { _id: msgId, senderId, image, text, createdAt } = msg
@@ -30,9 +32,10 @@ export const ChatContainer = () => {
                 senderId === userLoggedId
                   ? "bg-cyan-600 text-white"
                   : "bg-slate-800 text-slate-200"
-              const createdAtMsg = new Date(createdAt)
-                .toISOString()
-                .slice(11, 16)
+              const createdAtMsg = new Date(createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
 
               return (
                 <div key={msgId} className={`chat ${alingMessage}`}>
@@ -53,6 +56,8 @@ export const ChatContainer = () => {
               )
             })}
           </div>
+        ) : isMessagesLoading ? (
+          <MessagesLodingSkeleton />
         ) : (
           <NoChatHistoryPlaceholder name={fullName} />
         )}
