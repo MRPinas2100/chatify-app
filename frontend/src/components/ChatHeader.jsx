@@ -31,7 +31,11 @@ export const ChatHeader = () => {
       <div className="flex items-center space-x-3">
         <div className="avatar online">
           <div className="w-12 h-12">
-            <img src={imageUser} alt={userName} />
+            <img
+              src={imageUser}
+              alt={userName}
+              className="rounded-full object-cover"
+            />
           </div>
         </div>
         <div>

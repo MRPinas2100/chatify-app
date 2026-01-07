@@ -1,6 +1,9 @@
 import { cloudinary } from "../lib/cloudinary.js"
+import { getReceiverSocketId, io } from "../lib/socket.js"
 import { Message } from "../models/Messages.js"
 import { User } from "../models/User.js"
+
+const MAX_IMAGE_SIZE_BYTES = 3 * 1024 * 1024
 
 export const getAllContacts = async (req, res) => {
   const loggedInUserId = req.user._id
@@ -68,10 +71,6 @@ export const sendMessage = async (req, res) => {
   const senderId = req.user._id
   let imageUrl = null
 
-  if (!text && !!image) {
-    return res.status(400).json({ message: "Text or Image is required." })
-  }
-
   if (senderId.equals(receiverId)) {
     return res.status(400).json({ message: "Cannot send message to yourself." })
   }
@@ -81,12 +80,22 @@ export const sendMessage = async (req, res) => {
     return res.status(404).json({ message: "Receiver not found." })
   }
 
-  if (!text && !!image) {
+  if (!text && !image) {
     return res.status(400).json({ message: "Text or Image is required." })
   }
 
   try {
     if (image) {
+      const base64Payload = image.includes(";base64,")
+        ? image.split(",")[1]
+        : image
+      const imageBuffer = Buffer.from(base64Payload, "base64")
+      if (imageBuffer.length > MAX_IMAGE_SIZE_BYTES) {
+        return res
+          .status(400)
+          .json({ message: "Image size exceeds 20MB limit." })
+      }
+
       //upload base64 image to cloudinary
       const uploadResponse = await cloudinary.uploader.upload(image)
       imageUrl = uploadResponse.secure_url
@@ -98,6 +107,10 @@ export const sendMessage = async (req, res) => {
       image: imageUrl,
     })
     await newMessage.save()
+
+    const receiverSocketId = getReceiverSocketId(receiverId)
+    if (receiverSocketId) io.to(receiverSocketId).emit("newMessage", newMessage)
+
     res.status(201).json(newMessage)
   } catch (_) {
     return res.status(500).json({ message: "Internal server error" })

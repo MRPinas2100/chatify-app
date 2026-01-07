@@ -1,9 +1,7 @@
+import { BASE_URL_APIS } from "../constants/BASE_URLS"
 import axios from "axios"
 
-const url =
-  import.meta.env.MODE === "development" ? "http://localhost:3000/api" : "/api"
-
 export const axiosInstance = axios.create({
-  baseURL: url,
+  baseURL: BASE_URL_APIS,
   withCredentials: true,
 })
